@@ -1,0 +1,77 @@
+{
+  "version": " 0.0.1",
+  "name": "model-configurator",
+  "displayName": "Model Configurator",
+  "description": "Model configuration and training management UI",
+  "scope": "project",
+  "components": {
+    "panels": [
+      {
+        "name": "model_configurator",
+        "supportedSlots": [
+          {
+            "type": "dialog",
+            "configuration": {
+              "layout": {
+                "width": 1000,
+                "height": 800,
+                "position": "center",
+                "resizeable": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "toolbars": [
+      {
+        "name": "model_configurator_toolbar",
+        "displayName": "Model Setup",
+        "invoke": {
+          "type": "panel",
+          "namespace": "model_configurator"
+        },
+        "icon": "icon-dl-pipeline",
+        "location": "datasetBrowserApps"
+      }
+    ],
+    "modules": [
+      {
+        "name": "model-configurator-app",
+        "entryPoint": "scripts/main.py",
+        "className": "Runner",
+        "initInputs": [],
+        "config": {
+          "isCustomServer": true
+        },
+        "functions": [
+          {
+            "name": "run",
+            "output": [],
+            "input": []
+          }
+        ]
+      }
+    ],
+    "services": [
+      {
+        "name": "model-configurator-app",
+        "moduleName": "model-configurator-app",
+        "panelNames": ["model_configurator"],
+        "runtime": {
+          "podType": "regular-xs",
+          "numReplicas": 1,
+          "concurrency": 1,
+          "runnerImage": "gcr.io/viewo-g/piper/agent/cpu/toolbar-example:0.0.1",
+          "autoscaler": {
+            "minReplicas": 1,
+            "maxReplicas": 1
+          },
+          "preemptible": false,
+          "executionTimeout": 3600
+        },
+        "maxAttempts": 3
+      }
+    ]
+  }
+}
