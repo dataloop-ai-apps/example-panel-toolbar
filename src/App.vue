@@ -192,6 +192,24 @@
             </DlAccordion>
           </div>
         </section>
+
+        <!-- Active Query Section -->
+        <div>
+          <DlCheckbox
+            id="showActiveQuery"
+            v-model="showActiveQuery"
+            label="Show Active Query"
+          />
+          <div v-show="showActiveQuery">
+            <small
+              >This is for display only and has no effect on saving the
+              model.</small
+            >
+            <div class="json-editor-wrapper">
+              <DlJsonEditor v-model="activeQueryString" :readonly="true" />
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Actions -->
@@ -239,7 +257,11 @@ interface FieldDef {
 
 const currentTheme = ref<ThemeType>(ThemeType.LIGHT);
 const isDark = computed<boolean>(() => currentTheme.value === ThemeType.DARK);
-
+const activeQuery = ref<Object>({});
+const activeQueryString = ref<string>(
+  JSON.stringify(activeQuery.value, null, 2)
+);
+const showActiveQuery = ref<boolean>(false);
 const API_BASE = window.location.origin + "/api";
 
 // Context/state
@@ -595,6 +617,8 @@ async function initialize() {
     const settings = await window.dl.settings.get();
     currentTheme.value = settings.theme;
     currentProject.value = await window.dl.projects.get();
+    // Trigger active query, this will trigger the active query event, so use it anytime you want to get the active query
+    window.dl.sendEvent({ name: "triggerActiveQuery" });
     // Load models via API
     await loadModels();
   } catch (error) {
@@ -605,6 +629,9 @@ async function initialize() {
 onMounted(() => {
   window.dl.on(DlEvent.READY, async () => {
     await initialize();
+  });
+  window.dl.on(DlEvent.ACTIVE_QUERY, (query) => {
+    activeQuery.value = query;
   });
 
   window.dl.on(DlEvent.THEME, (theme) => {
@@ -619,6 +646,13 @@ watch(currentTheme, (t) => {
     t === ThemeType.DARK ? "dark-mode" : "light-mode"
   );
 });
+watch(
+  activeQuery,
+  (newVal) => {
+    activeQueryString.value = JSON.stringify(newVal, null, 2);
+  },
+  { deep: true }
+);
 </script>
 
 <style>

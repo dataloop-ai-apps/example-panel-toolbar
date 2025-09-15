@@ -55,7 +55,7 @@ cp env.example .env
 # Edit .env with your actual values
 # .env file should contain:
 DTLPY_ENV=PROD
-DATALOOP_TOKEN=your_token_here
+DTLPY_TOKEN=your_token_here
 ```
 
 ### Step 3: Docker Build and Run
@@ -127,7 +127,7 @@ For running local development, please see instructions here [Building Web Apps](
 
    # Edit .env with your actual values:
    DTLPY_ENV=prod
-   DATALOOP_TOKEN=your_token_here
+   DTLPY_TOKEN=your_token_here
    ```
 
 ### Install in Your Project
