@@ -1,4 +1,4 @@
-FROM dataloopai/dtlpy-agent:cpu.py3.10.opencv
+FROM hub.dataloop.ai/dtlpy-runner-images/cpu:python3.10_opencv
 
 # Install required packages explicitly
 RUN pip install --no-cache-dir \
