@@ -2,23 +2,6 @@
 
 Live testing performed 2026-02-26 against both `main` (broken) and `improve/readme-and-dx` (fixed).
 
-## Screenshots
-
-All screenshots are in `walkthrough-screenshots/`.
-
-| Screenshot | Description |
-|---|---|
-| `phase1_panel_http.png` | **BEFORE** — `http://localhost:3004/model_configurator` → nginx 400 Bad Request |
-| `phase1_panel_https.png` | **BEFORE** — `https://localhost:3004/model_configurator` → app loads (if you know to use HTTPS) |
-| `phase1_route_http.png` | **BEFORE** — `http://localhost:3004/route-slot` → nginx 400 Bad Request |
-| `phase1_route_https.png` | **BEFORE** — `https://localhost:3004/route-slot` → app loads (blank — needs platform context) |
-| `phase3_panel_http.png` | **AFTER** — HTTP still returns 400 (expected — nginx is SSL-only) |
-| `phase3_panel_https.png` | **AFTER** — `https://localhost:3004/model_configurator` → Model Training Configuration UI |
-| `phase3_route_http.png` | **AFTER** — HTTP still returns 400 (expected) |
-| `phase3_route_https.png` | **AFTER** — `https://localhost:3004/route-slot` → app loads (blank — needs platform context) |
-
-Key takeaway: The HTTP screenshots (phase1 and phase3) both show the same 400 error — this proves the old README's `http://` URL was always wrong. The HTTPS screenshots show the apps loading correctly.
-
 ---
 
 ## Phase 1: BEFORE (on `main`)
@@ -64,7 +47,15 @@ $ curl https://localhost:3004/model_configurator  → 200 OK
 ```
 README says `http://localhost:3004/model_configurator`. Nginx only listens on SSL (`listen 3000 ssl;`).
 
-**FAILURE: README URL doesn't work. Users get a blank/error page with no explanation.**
+Following the README's HTTP URL:
+
+![Panel-toolbar HTTP — 400 Bad Request](walkthrough-screenshots/phase1_panel_http.png)
+
+Using HTTPS instead (undocumented):
+
+![Panel-toolbar HTTPS — app loads](walkthrough-screenshots/phase1_panel_https.png)
+
+**FAILURE: README URL doesn't work. Users get a 400 error page with no explanation.**
 
 ### App 2: example-route-slot
 
@@ -107,6 +98,17 @@ Same as panel-toolbar. README says `http://`, nginx requires `https://`.
 $ curl http://localhost:3004/route-slot   → 400 Bad Request
 $ curl https://localhost:3004/route-slot  → 200 OK
 ```
+
+Following the README's HTTP URL:
+
+![Route-slot HTTP — 400 Bad Request](walkthrough-screenshots/phase1_route_http.png)
+
+Using HTTPS instead (undocumented):
+
+![Route-slot HTTPS — app loads](walkthrough-screenshots/phase1_route_https.png)
+
+> Note: The route-slot app renders blank in a standalone browser because the Vue components need the Dataloop platform frame driver context to display content. The 200 response and correct HTML confirm the server is working.
+
 **FAILURE: README URL doesn't work.**
 
 ### Phase 1 Difficulty Rating: 4/10 — impossible to complete
@@ -163,9 +165,18 @@ $ curl -sk https://localhost:3004/model_configurator → 200
       <title>DL Model Configurator - 2025</title>
     ...
 ```
+
+![Panel-toolbar HTTPS after fix — Model Training Configuration UI](walkthrough-screenshots/phase3_panel_https.png)
+
 PASS
 
-**Step 6 — API responds:**
+**Step 6 — HTTP still returns 400 (expected — documented in troubleshooting):**
+
+![Panel-toolbar HTTP after fix — 400 is expected, README now says HTTPS](walkthrough-screenshots/phase3_panel_http.png)
+
+PASS — the README now correctly documents `https://` and the troubleshooting table explains this.
+
+**Step 7 — API responds:**
 ```
 $ curl -sk https://localhost:3004/api/models → 422
 ```
@@ -216,6 +227,11 @@ $ curl -sk https://localhost:3004/route-slot → 200
     <title>Route Slot Example</title>
     ...
 ```
+
+![Route-slot HTTPS after fix — app loads](walkthrough-screenshots/phase3_route_https.png)
+
+> Note: Renders blank in standalone browser (needs Dataloop platform context). The 200 response and correct HTML confirm the server is working correctly.
+
 PASS
 
 **Step 6 — API health endpoint:**
