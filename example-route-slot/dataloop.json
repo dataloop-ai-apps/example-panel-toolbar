@@ -1,0 +1,74 @@
+{
+    "displayName": "Route Slot Example",
+    "name": "route-slot-example",
+    "scope": "project",
+    "version": "0.0.1",
+    "components": {
+        "panels": [
+            {
+                "name": "route-slot-example",
+                "supportedSlots": [
+                    {
+                        "type": "route",
+                        "configuration": {
+                            "route": {
+                                "name": "Route Slot Example",
+                                "path": "route-slot",
+                                "src": "route-slot/index.html",
+                                "crumbConfig": true,
+                                "sidePanelConfig": {
+                                    "icon": "icon-dl-edit",
+                                    "orderId": 7,
+                                    "requiredResources": ["project"]
+                                }
+                            }
+                        }
+                    }
+                ],
+                "conditions": {
+                    "resources": []
+                }
+            }
+        ],
+        "modules": [
+            {
+                "name": "route-slot-module",
+                "entryPoint": "scripts/main.py",
+                "className": "Runner",
+                "config": {
+                    "isCustomServer": true
+                },
+                "initInputs": [],
+                "functions": [
+                    {
+                        "name": "run",
+                        "input": [],
+                        "output": [],
+                        "displayIcon": "icon-dl-dataloop",
+                        "displayName": "Route Slot Example"
+                    }
+                ]
+            }
+        ],
+        "services": [
+            {
+                "name": "route-slot-service",
+                "moduleName": "route-slot-module",
+                "panelNames": ["route-slot-example"],
+                "runtime": {
+                    "podType": "regular-xs",
+                    "numReplicas": 1,
+                    "concurrency": 1,
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/cpu/toolbar-example:0.0.1",
+                    "autoscaler": {
+                        "minReplicas": 1,
+                        "maxReplicas": 1
+                    },
+                    "preemptible": false,
+                    "executionTimeout": 3600
+                },
+                "maxAttempts": 3
+            }
+        ]
+    }
+}
