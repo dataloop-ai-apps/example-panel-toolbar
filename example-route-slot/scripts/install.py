@@ -1,11 +1,19 @@
 import dtlpy as dl
+from dotenv import load_dotenv
+import os
 import argparse
+load_dotenv()
 
+# Parse command line arguments
 parser = argparse.ArgumentParser(description='Install Dataloop app in project')
 parser.add_argument('-project_id', '--project_id', required=True, help='Project ID where the app will be installed')
 args = parser.parse_args()
 
-dl.login()
+env = os.getenv('DTLPY_ENV')
+token = os.getenv('DTLPY_TOKEN')
+
+dl.setenv(env)
+dl.login_token(token)
 
 try:
     print(f"Getting project: {args.project_id}")
