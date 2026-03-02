@@ -1,50 +1,54 @@
 # Dataloop UI Application Examples
 
-Example applications demonstrating how to build and deploy UI apps on the [Dataloop](https://dataloop.ai) platform. Each example showcases a different application slot type.
+Two working examples that show you how to build custom web applications for the [Dataloop](https://dataloop.ai) platform. Pick the one that matches what you want to build, follow the steps, and you'll have a running app.
 
-## Examples
+## Which Example Should I Use?
 
-| Example | Slot Type | Description |
+| If you want to... | Use this example | What it looks like |
 |---|---|---|
-| [Panel + Toolbar](./example-panel-toolbar/) | `dialog` + toolbar | A popup panel triggered by a toolbar button in the dataset browser |
-| [Route Slot](./example-route-slot/) | `route` | A full-page application accessible from the platform sidebar |
+| Add a **popup button** to the dataset browser (e.g. a settings panel, a quick action) | [Panel + Toolbar](./example-panel-toolbar/) | A button appears in the dataset toolbar. Clicking it opens a popup dialog. |
+| Add a **full page** to the platform sidebar (e.g. a dashboard, a standalone tool) | [Route Slot](./example-route-slot/) | An icon appears in the left sidebar. Clicking it opens your app as a full page. |
 
-## Quick Start
+## Before You Start
 
-Each example is a self-contained project. Navigate into any example directory and follow its README:
+You need four things:
 
-```bash
-cd example-panel-toolbar   # or example-route-slot
+1. **Docker Desktop** installed and running ([download](https://www.docker.com/products/docker-desktop/))
+2. **Python 3.10 or newer** installed ([download](https://www.python.org/downloads/))
+3. **A Dataloop account** — sign up free at [console.dataloop.ai](https://console.dataloop.ai)
+4. **A Dataloop project** — after signing up, create a project from the console home page
+
+You do **not** need to install Node.js on your own machine. The Docker container handles that.
+
+## Getting Started
+
+Each example has its own README with step-by-step setup instructions:
+
+- **[Panel + Toolbar README](./example-panel-toolbar/README.md)** — popup dialog triggered by a toolbar button
+- **[Route Slot README](./example-route-slot/README.md)** — full page accessed from the sidebar
+
+Both examples follow the same workflow: get a token, create `.env`, build a Docker image, and start the container.
+
+## How the Local Dev Environment Works
+
+When you run the Docker container, three services start inside it:
+
+```
+Your browser
+  └── https://localhost:3004
+        └── Nginx (handles HTTPS, routes traffic)
+              ├── /api requests  →  Python backend (FastAPI + Dataloop SDK)
+              └── everything else →  Vue.js frontend (Vite with live reload)
 ```
 
-### Local Development (Docker)
+Your project folder is mounted into the container, so any changes you make to the frontend code (`src/` folder) will appear in the browser immediately without restarting anything.
 
-```bash
-docker build --pull --rm -f 'local.Dockerfile' -t 'my-app:latest' '.'
-docker run -p 3004:3000 -it -v "$(pwd):/tmp/app" my-app:latest
-```
+## Deploying to the Dataloop Platform
 
-### Platform Deployment
+Once your app works locally, you can publish it to your Dataloop project so other team members can use it. Each example README has deployment instructions — run `scripts/install.py` from inside the example directory. The script reads credentials from your `.env` file.
 
-```bash
-python scripts/install.py -project_id YOUR_PROJECT_ID
-```
+## Learn More
 
-## Slot Types Overview
-
-| Slot Type | Trigger | Display | Best For |
-|---|---|---|---|
-| `dialog` + toolbar | Toolbar button click | Popup dialog (configurable size) | Quick actions, configuration panels |
-| `route` | Sidebar navigation icon | Full page | Dashboards, full applications |
-
-## Prerequisites
-
-- Python 3.10+
-- Docker
-- Node.js 16+
-- Dataloop account and project
-
-## Documentation
-
-- [Building Web Apps on Dataloop](https://developers.dataloop.ai/tutorials/applications/web_application/chapter)
-- [Dataloop SDK Documentation](https://developers.dataloop.ai)
+- [Building Web Apps on Dataloop](https://developers.dataloop.ai/tutorials/applications/web_application/chapter) — official tutorial
+- [Dataloop Applications Overview](https://developers.dataloop.ai/tutorials/applications/introduction/chapter) — how panels, toolbars, and slots work
+- [Dataloop SDK Documentation](https://developers.dataloop.ai) — full Python SDK reference

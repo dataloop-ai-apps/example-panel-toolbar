@@ -243,7 +243,7 @@ import {
   DlJsonEditor,
 } from "@dataloop-ai/components";
 import { DlEvent, ThemeType } from "@dataloop-ai/jssdk";
-import { ref, onMounted, computed, watch, nextTick } from "vue-demi";
+import { ref, onMounted, computed, watch, nextTick } from "vue";
 
 type MessageType = "info" | "success" | "error" | "warning";
 type FieldType = "checkbox" | "number" | "text" | "object";
@@ -477,17 +477,14 @@ async function loadModels() {
       availableModels.value = [];
     }
 
-    // No fallback to defaults - keep empty if no models
-    if (!availableModels.value || availableModels.value.length === 0) {
-      console.log("[Frontend] No models available from backend");
-      availableModels.value = [];
-    }
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("[Frontend] Error loading models:", error);
-    console.error("[Frontend] Error details:", {
-      message: error.message,
-      stack: error.stack,
-    });
+    if (error instanceof Error) {
+      console.error("[Frontend] Error details:", {
+        message: error.message,
+        stack: error.stack,
+      });
+    }
     // No defaults - keep empty on error
     availableModels.value = [];
   } finally {
@@ -590,8 +587,9 @@ async function onSaveButtonClick() {
         );
       }
     }
-  } catch (error) {
-    showMessage("Failed to save: " + error.message, "error");
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    showMessage("Failed to save: " + message, "error");
   } finally {
     saving.value = false;
   }
@@ -621,8 +619,9 @@ async function initialize() {
     window.dl.sendEvent({ name: "triggerActiveQuery" });
     // Load models via API
     await loadModels();
-  } catch (error) {
-    showMessage("Initialization failed: " + error.message, "error");
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    showMessage("Initialization failed: " + message, "error");
   }
 }
 

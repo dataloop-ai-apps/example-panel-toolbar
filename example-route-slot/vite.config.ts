@@ -14,6 +14,16 @@ export default defineConfig({
         https: false,
         port: 8084
     },
+    optimizeDeps: {
+        include: [
+            'lodash',
+            '@dataloop-ai/components',
+            'flat',
+            'highlight.js',
+            'sortablejs',
+            '@dataloop-ai/jssdk',
+        ],
+    },
     resolve: {
         alias: {
             '@': '/src'

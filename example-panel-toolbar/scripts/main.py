@@ -1,7 +1,5 @@
 import dtlpy as dl
 import subprocess
-import sys
-import os
 
 
 port = 3000
@@ -13,11 +11,7 @@ class Runner(dl.BaseServiceRunner):
         cmd = ["uvicorn", "scripts.app:app", "--host", "0.0.0.0", "--port", str(port), "--timeout-keep-alive", "60"]
         
         print(f"Starting uvicorn server on port {port}...")
-        self.process = subprocess.Popen(
-            cmd,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
-        )
+        self.process = subprocess.Popen(cmd)
         
         print(f"Server started with PID: {self.process.pid}")
         print(f"Server running at http://0.0.0.0:{port}")

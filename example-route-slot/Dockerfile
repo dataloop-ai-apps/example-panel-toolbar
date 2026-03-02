@@ -1,5 +1,6 @@
 FROM hub.dataloop.ai/dtlpy-runner-images/cpu:python3.10_opencv
 
+# Install required packages explicitly
 RUN pip install --no-cache-dir \
     dtlpy>=1.90.0 \
     fastapi>=0.104.0 \

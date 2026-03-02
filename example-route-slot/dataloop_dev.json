@@ -1,0 +1,34 @@
+{
+    "version": "2.0.0",
+    "name": "route-slot-example",
+    "displayName": "Route Slot Example",
+    "scope": "project",
+    "components": {
+        "panels": [
+            {
+                "name": "route-slot-example",
+                "supportedSlots": [
+                    {
+                        "type": "route",
+                        "configuration": {
+                            "route": {
+                                "name": "Route Slot Example",
+                                "path": "route-slot",
+                                "src": "route-slot/index.html",
+                                "crumbConfig": true,
+                                "sidePanelConfig": {
+                                    "icon": "icon-dl-edit",
+                                    "orderId": 7,
+                                    "requiredResources": ["project"]
+                                }
+                            }
+                        }
+                    }
+                ],
+                "conditions": {
+                    "resources": []
+                }
+            }
+        ]
+    }
+}

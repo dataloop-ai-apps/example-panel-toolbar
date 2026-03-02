@@ -6,9 +6,11 @@
     "strict": false,
     "jsx": "preserve",
     "esModuleInterop": true,
+    "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
     "useDefineForClassFields": true,
     "skipLibCheck": true,
+    "sourceMap": true,
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {

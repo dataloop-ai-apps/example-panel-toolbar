@@ -10,6 +10,9 @@
                 <dl-typography color="textSecondary">
                     This is a simple route-slot application running in the Dataloop platform.
                 </dl-typography>
+                <dl-alert v-if="!contextAvailable" type="warning" class="context-alert" :fluid="true">
+                    Outside Dataloop context (local dev). User and project values are unavailable.
+                </dl-alert>
 
                 <div class="info-section">
                     <div class="info-row">
@@ -48,13 +51,16 @@ import {
     DlAlert
 } from '@dataloop-ai/components'
 import { DlEvent, ThemeType } from '@dataloop-ai/jssdk'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 
 const isReady = ref(false)
+const contextAvailable = ref(true)
 const currentTheme = ref<ThemeType>(ThemeType.DARK)
 const currentUser = ref('')
 const projectId = ref('')
 const showMessage = ref(false)
+const READY_TIMEOUT_MS = 2000
+let readyTimeout: ReturnType<typeof setTimeout> | null = null
 
 const isDark = computed(() => currentTheme.value === ThemeType.DARK)
 
@@ -65,19 +71,56 @@ const handleClick = () => {
     }, 3000)
 }
 
-onMounted(() => {
-    window.dl.on(DlEvent.READY, async () => {
+const handleTheme = (data: ThemeType) => {
+    currentTheme.value = data
+}
+
+const applyLocalFallback = () => {
+    currentUser.value = 'N/A'
+    projectId.value = 'N/A'
+    contextAvailable.value = false
+    isReady.value = true
+}
+
+const handleReady = async () => {
+    if (isReady.value) {
+        return
+    }
+    if (readyTimeout) {
+        clearTimeout(readyTimeout)
+    }
+    try {
         const settings = await window.dl.settings.get()
         currentUser.value = settings.currentUser
         const project = await window.dl.projects.get()
         projectId.value = project.id
 
+        contextAvailable.value = true
         currentTheme.value = settings.theme as unknown as ThemeType
-        window.dl.on(DlEvent.THEME, (data) => {
-            currentTheme.value = data
-        })
+        window.dl.off(DlEvent.THEME, handleTheme)
+        window.dl.on(DlEvent.THEME, handleTheme)
         isReady.value = true
-    })
+    } catch (error) {
+        console.warn('Route-slot context unavailable, using local fallback', error)
+        applyLocalFallback()
+    }
+}
+
+onMounted(() => {
+    readyTimeout = setTimeout(() => {
+        if (!isReady.value) {
+            applyLocalFallback()
+        }
+    }, READY_TIMEOUT_MS)
+    window.dl.on(DlEvent.READY, handleReady)
+})
+
+onUnmounted(() => {
+    if (readyTimeout) {
+        clearTimeout(readyTimeout)
+    }
+    window.dl.off(DlEvent.READY, handleReady)
+    window.dl.off(DlEvent.THEME, handleTheme)
 })
 </script>
 
@@ -134,6 +177,10 @@ onMounted(() => {
 }
 
 .demo-alert {
+    width: 100%;
+}
+
+.context-alert {
     width: 100%;
 }
 </style>
