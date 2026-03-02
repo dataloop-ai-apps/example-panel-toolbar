@@ -252,3 +252,6 @@ certs/
 
 # Node
 node_modules/
+
+# Mode working artifacts (plans, PRDs, design docs, etc.)
+.plans/

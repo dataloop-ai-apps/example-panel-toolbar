@@ -1,0 +1,31 @@
+metadata:
+  repo_name: example-panel-toolbar-d6a62615
+  created_at: '2026-03-02T20:37:07.241789'
+  last_updated: '2026-03-02T20:39:58.743506'
+  version: '2.0'
+architecture: ''
+stack:
+  languages:
+  - typescript
+  - python
+  frameworks: []
+conventions: []
+context:
+  notes:
+  - 'Hot files: ?'
+learnings:
+- id: bp-794077f4
+  summary: In startup shell scripts that introduce mandatory auth pre-steps, failing
+    auth must terminate process startup (`set -e` or explicit exit checks). Otherwise
+    docs and runtime behavior diverge and services start despite failed authentication.
+  category: bug_patterns
+  confidence: 50
+  date: '2026-03-02T20:39:54.693873'
+- id: g-f2a0520b
+  summary: When adding local fallback timers around Dataloop READY events, avoid using
+    a global `isReady` guard that blocks late READY processing; otherwise slow platform
+    initialization can permanently lock UI into fallback state.
+  category: gotchas
+  confidence: 50
+  date: '2026-03-02T20:39:58.743375'
+docs: []
