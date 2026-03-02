@@ -1,7 +1,7 @@
 metadata:
   repo_name: example-panel-toolbar-d6a62615
   created_at: '2026-03-02T20:37:07.241789'
-  last_updated: '2026-03-02T20:41:52.907425'
+  last_updated: '2026-03-02T20:46:19.092624'
   version: '2.0'
 architecture: ''
 stack:
@@ -41,4 +41,11 @@ learnings:
   category: decisions
   confidence: 50
   date: '2026-03-02T20:41:52.907313'
+- id: g-f74d0105
+  summary: Tester-phase validation for this repo can be partially blocked in agent
+    environments without Docker on PATH and without a repo-root `./.venv`; integration/auth
+    runtime tests should explicitly gate on these prerequisites before execution.
+  category: gotchas
+  confidence: 50
+  date: '2026-03-02T20:46:19.092492'
 docs: []
