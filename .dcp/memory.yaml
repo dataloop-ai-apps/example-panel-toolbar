@@ -1,7 +1,7 @@
 metadata:
   repo_name: example-panel-toolbar-d6a62615
   created_at: '2026-03-02T20:37:07.241789'
-  last_updated: '2026-03-02T20:39:58.743506'
+  last_updated: '2026-03-02T20:41:52.907425'
   version: '2.0'
 architecture: ''
 stack:
@@ -28,4 +28,17 @@ learnings:
   category: gotchas
   confidence: 50
   date: '2026-03-02T20:39:58.743375'
+- id: bp-cd2c08de
+  summary: In route-slot initialization, fallback timeout should not prevent later
+    DlEvent.READY handling; avoid readiness guards that return early once fallback
+    marks UI as ready.
+  category: bug_patterns
+  confidence: 50
+  date: '2026-03-02T20:41:47.791765'
+- id: adr-72335247
+  summary: Container startup scripts that run authentication pre-steps must fail fast
+    on login errors (e.g., `set -e`) so services do not start with invalid auth state.
+  category: decisions
+  confidence: 50
+  date: '2026-03-02T20:41:52.907313'
 docs: []

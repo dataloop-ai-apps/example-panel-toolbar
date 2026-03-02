@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 # Authenticate to Dataloop using dtlpy with env and token from .env
 python scripts/login.py

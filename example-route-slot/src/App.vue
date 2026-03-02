@@ -83,11 +83,9 @@ const applyLocalFallback = () => {
 }
 
 const handleReady = async () => {
-    if (isReady.value) {
-        return
-    }
     if (readyTimeout) {
         clearTimeout(readyTimeout)
+        readyTimeout = null
     }
     try {
         const settings = await window.dl.settings.get()
