@@ -1,0 +1,38 @@
+{
+  "version": "2.0.0",
+  "name": "model-configurator",
+  "displayName": "Model Configurator",
+  "description": "Model configuration and training management UI",
+  "scope": "project",
+  "components": {
+    "panels": [
+      {
+        "name": "model_configurator",
+        "supportedSlots": [
+          {
+            "type": "dialog",
+            "configuration": {
+              "layout": {
+                "width": 1000,
+                "height": 800,
+                "position": "center",
+                "resizeable": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "toolbars": [
+      {
+        "displayName": "Model Training Setup Local",
+        "invoke": {
+          "type": "panel",
+          "namespace": "model_configurator"
+        },
+        "icon": "icon-dl-pipeline",
+        "location": "datasetBrowserApps"
+      }
+    ]
+  }
+}
