@@ -7,7 +7,7 @@
     "components": {
         "panels": [
             {
-                "name": "route-slot-example",
+                "name": "route-slot",
                 "supportedSlots": [
                     {
                         "type": "route",
@@ -55,7 +55,7 @@
             {
                 "name": "route-slot-service",
                 "moduleName": "route-slot-module",
-                "panelNames": ["route-slot-example"],
+                "panelNames": ["route-slot"],
                 "runtime": {
                     "podType": "regular-xs",
                     "numReplicas": 1,

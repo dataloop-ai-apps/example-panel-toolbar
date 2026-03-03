@@ -4,6 +4,8 @@ This example builds a full-page application that appears as an icon in the Datal
 
 Use this pattern when you want to build a standalone tool, dashboard, or multi-view application inside the platform.
 
+[What You Get](#what-youll-end-up-with) | **[Quick Start](#quick-start)** | [Local Development](#local-development) | [Project Structure](#project-structure) | [How It Works](#how-the-route-slot-pattern-works) | [Customization](#customization-guide) | [Troubleshooting](#troubleshooting)
+
 ## What You'll End Up With
 
 - A **sidebar icon** (pencil/edit icon) in the Dataloop platform's left navigation
@@ -13,9 +15,22 @@ Use this pattern when you want to build a standalone tool, dashboard, or multi-v
 
 When deployed, your app's icon appears in the sidebar alongside Dataloop's built-in pages like Datasets, Pipelines, and Tasks.
 
-## Before You Start
+## Quick Start
 
-Make sure you have:
+Deploy this app to your Dataloop project in two steps:
+
+```bash
+pip install dtlpy
+python scripts/install.py --project_id YOUR_PROJECT_ID
+```
+
+The script opens a browser window to log in if needed. Once it finishes, open your project in the Dataloop console and look for the new icon in the left sidebar.
+
+Want to customize the app first? Continue to [Local Development](#local-development) below.
+
+## Local Development
+
+To run and customize the app locally before deploying, you'll need:
 
 1. **Docker Desktop** installed and running ([download](https://www.docker.com/products/docker-desktop/))
 2. **Python 3.10 or newer** ([download](https://www.python.org/downloads/))
@@ -23,65 +38,7 @@ Make sure you have:
 
 ## Step-by-Step Setup
 
-### Step 1: Get your Dataloop token
-
-Open a terminal and run:
-
-**macOS / Linux:**
-
-```bash
-pip3 install dtlpy
-python3 -c "import dtlpy as dl; dl.login(); print(dl.token())"
-```
-
-**Windows (Command Prompt, PowerShell, or Git Bash):**
-
-```bash
-pip install dtlpy
-python -c "import dtlpy as dl; dl.login(); print(dl.token())"
-```
-
-A browser window opens for you to log in. After login, your terminal prints a long token string. **Copy it** — you'll need it next.
-
-> Tokens expire after 24 hours. If the app stops authenticating tomorrow, just repeat this step.
-
-### Step 2: Create your `.env` file
-
-From inside this directory (`example-route-slot/`), copy the template:
-
-**macOS / Linux / Git Bash:**
-
-```bash
-cp env.example .env
-```
-
-**Windows Command Prompt:**
-
-```cmd
-copy env.example .env
-```
-
-**Windows PowerShell:**
-
-```powershell
-Copy-Item env.example .env
-```
-
-Open `.env` in a text editor and fill in your values:
-
-```
-DTLPY_PROJECT_ID=your_project_id_here
-DTLPY_ENV=prod
-DTLPY_TOKEN=paste_your_token_here
-```
-
-The project ID is needed for deployment (`install.py`). To find it: open your project at [console.dataloop.ai](https://console.dataloop.ai) — the ID is the string after `/projects/` in the URL.
-
-Save the file. Do not commit this file to git — it contains your personal credentials.
-
-> **Private tenant?** If your organization uses a dedicated Dataloop environment instead of `console.dataloop.ai`, change `DTLPY_ENV` to your tenant name (e.g., `DTLPY_ENV=your-company`). Most users should leave it as `prod`.
-
-### Step 3: Build the Docker image
+### Step 1: Build the Docker image
 
 ```bash
 docker build --rm -f local.Dockerfile -t example-route-slot:latest .
@@ -89,7 +46,7 @@ docker build --rm -f local.Dockerfile -t example-route-slot:latest .
 
 This takes a few minutes the first time. It downloads a base image, installs Python and Node.js dependencies, and generates an SSL certificate.
 
-### Step 4: Start the container
+### Step 2: Start the container
 
 **macOS / Linux / Git Bash:**
 
@@ -115,7 +72,7 @@ Wait for the startup to finish. You'll see output from several services. The app
 VITE v5.x.x  ready in xxxxms
 ```
 
-### Step 5: Open the app
+### Step 3: Open the app
 
 Go to this URL in your browser:
 
@@ -137,45 +94,7 @@ Your project folder is mounted into the container. While the container is runnin
 
 - **Frontend changes** (`src/` folder): Edits appear in the browser automatically via Vite HMR — no restart needed.
 - **Backend changes** (`scripts/app.py`): Also hot-reloaded automatically — uvicorn runs with `--reload` in dev mode.
-- **Structural changes** (new dependencies in `package.json`, changes to `scripts/main.py`, Dockerfile changes): Stop the container (`Ctrl+C`), rebuild the image (Step 3), and restart (Step 4).
-
-## Deploying to Dataloop
-
-When your app is ready for others to use, publish it to your project. Make sure `DTLPY_PROJECT_ID` is set in your `.env` file (see Step 2).
-
-First, install the Python dependencies that `install.py` needs:
-
-**macOS / Linux:**
-
-```bash
-pip3 install -r requirements.txt
-```
-
-**Windows:**
-
-```bash
-pip install -r requirements.txt
-```
-
-Then run the deploy script:
-
-**macOS / Linux:**
-
-```bash
-python3 scripts/install.py
-```
-
-**Windows:**
-
-```bash
-python scripts/install.py
-```
-
-You can also pass the project ID directly instead of using `.env`: `python3 scripts/install.py --project_id YOUR_PROJECT_ID` (or `python` on Windows).
-
-> **Auth:** The script uses your cached Dataloop login session if it's still valid. If the session has expired, it falls back to the `DTLPY_TOKEN` value from your `.env` file.
-
-After installation, open your project in the Dataloop console and look for the new icon in the left sidebar.
+- **Structural changes** (new dependencies in `package.json`, changes to `scripts/main.py`, Dockerfile changes): Stop the container (`Ctrl+C`), rebuild the image (Step 1), and restart (Step 2).
 
 ## Project Structure
 
@@ -187,15 +106,14 @@ example-route-slot/
 │   └── style.css           # Styles
 ├── scripts/                # Backend code (Python)
 │   ├── app.py              # API server — health endpoint (add your own here)
-│   ├── login.py            # Reads .env and authenticates with Dataloop
 │   ├── install.py          # Publishes and installs the app to Dataloop
 │   └── main.py             # Entry point used by the platform in production
 ├── panels/route-slot/      # Pre-built frontend (used in production)
+├── requirements.txt        # Python dependencies for the deployed service
 ├── dataloop.json           # App manifest — defines the panel, route, and service
 ├── local.Dockerfile        # Docker image for local development
 ├── nginx.conf              # Routes HTTPS traffic to frontend and backend
 ├── start_dev.sh            # Startup script that runs inside the container
-├── env.example             # Template for your .env file
 ├── package.json            # Node.js dependencies
 └── vite.config.ts          # Frontend build configuration
 ```
@@ -264,11 +182,9 @@ This outputs compiled files to `panels/route-slot/`. These files are included in
 | What you see | What to do |
 |---|---|
 | Browser shows "400 Bad Request" | You used `http://` instead of `https://`. Change the URL to start with `https://`. |
-| Browser shows a certificate warning | This is expected. Click through the warning (see Step 5). |
+| Browser shows a certificate warning | This is expected. Click through the warning (see Step 3). |
 | Spinner stays forever in the browser | If loading lasts more than ~2 seconds locally, something is wrong. The app should render and show `N/A` for platform fields outside Dataloop context. |
 | User/Project show `N/A` locally | This is expected outside Dataloop context. Install the app in the Dataloop platform to see real values. |
-| `login.py` crashes with a token error | Your token may be expired. Repeat Step 1 to get a fresh one, update `.env`, and restart the container. |
-| Container exits immediately after starting | Check that `.env` exists and has both `DTLPY_ENV` and `DTLPY_TOKEN` filled in. |
 | `docker build` fails downloading the base image | The base image is hosted on `hub.dataloop.ai` which may require authentication. Try removing `--pull` from the build command if present. |
 | Port 3004 is already in use | Another container or process is using that port. Run `docker ps` to find it, then `docker stop <container_id>`. |
 

@@ -7,5 +7,4 @@ RUN pip install --no-cache-dir \
     uvicorn[standard]>=0.24.0 \
     aiofiles>=23.0.0 \
     pydantic>=2.0.0 \
-    python-dotenv>=1.0.0 \
     typing-extensions>=4.5.0

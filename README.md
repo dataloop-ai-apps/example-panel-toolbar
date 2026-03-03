@@ -27,7 +27,7 @@ Each example has its own README with step-by-step setup instructions:
 - **[Panel + Toolbar README](./example-panel-toolbar/README.md)** — popup dialog triggered by a toolbar button
 - **[Route Slot README](./example-route-slot/README.md)** — full page accessed from the sidebar
 
-Both examples follow the same workflow: get a token, create `.env`, build a Docker image, and start the container.
+Both examples follow the same workflow: build a Docker image, start the container, and open the app in your browser.
 
 ## How the Local Dev Environment Works
 
@@ -45,7 +45,7 @@ Your project folder is mounted into the container, so any changes you make to th
 
 ## Deploying to the Dataloop Platform
 
-Once your app works locally, you can publish it to your Dataloop project so other team members can use it. Each example README has deployment instructions — run `scripts/install.py` from inside the example directory. The script reads credentials from your `.env` file.
+Once your app works locally, you can publish it to your Dataloop project so other team members can use it. Each example README has deployment instructions — run `scripts/install.py` from inside the example directory. The script uses your cached Dataloop login session (and opens a browser login if the session has expired).
 
 ## Learn More
 
