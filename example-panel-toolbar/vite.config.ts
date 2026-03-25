@@ -11,7 +11,7 @@ export default defineConfig({
   },
   base: "/model_configurator",
   server: {
-    host: "0.0.0.0",
+    host: "localhost",
     https: false,
     port: 8084,
   },

@@ -10,7 +10,7 @@ export default defineConfig({
     },
     base: '/route-slot',
     server: {
-        host: '0.0.0.0',
+        host: 'localhost',
         https: false,
         port: 8084
     },

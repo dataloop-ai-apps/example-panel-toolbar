@@ -262,7 +262,21 @@ const activeQueryString = ref<string>(
   JSON.stringify(activeQuery.value, null, 2)
 );
 const showActiveQuery = ref<boolean>(false);
-const API_BASE = window.location.origin + "/api";
+
+function getSafeApiBase(): string {
+  const origin = window.location.origin;
+  try {
+    const url = new URL(origin);
+    if (!["https:", "http:"].includes(url.protocol)) {
+      throw new Error("Invalid protocol");
+    }
+    return url.origin + "/api";
+  } catch {
+    return "/api";
+  }
+}
+
+const API_BASE = getSafeApiBase();
 
 // Context/state
 const currentProject = ref<any | null>(null);
