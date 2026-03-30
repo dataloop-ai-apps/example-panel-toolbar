@@ -9,8 +9,10 @@ RUN apt-get update && apt-get install -y \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Node.js and npm
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+# Install Node.js and npm (download script to file before executing to avoid pipe-to-shell)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x -o /tmp/nodesource_setup.sh && \
+    bash /tmp/nodesource_setup.sh && \
+    rm -f /tmp/nodesource_setup.sh && \
     apt-get install -y nodejs && \
     npm install -g npm@latest
 
@@ -23,12 +25,12 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 WORKDIR /tmp/app
 
 RUN pip install --no-cache-dir \
-    dtlpy>=1.90.0 \
-    fastapi>=0.104.0 \
-    uvicorn[standard]>=0.24.0 \
-    aiofiles>=23.0.0 \
-    pydantic>=2.0.0 \
-    typing-extensions>=4.5.0
+    dtlpy==1.98.19 \
+    fastapi==0.115.12 \
+    uvicorn[standard]==0.34.0 \
+    aiofiles==24.1.0 \
+    pydantic==2.11.1 \
+    typing-extensions==4.13.1
 
 # Set the default command to run start_dev.sh (available via volume mount)
 CMD ["bash", "-c", "chmod +x /tmp/app/start_dev.sh && ./start_dev.sh"]

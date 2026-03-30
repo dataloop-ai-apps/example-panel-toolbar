@@ -2,9 +2,9 @@ FROM hub.dataloop.ai/dtlpy-runner-images/cpu:python3.10_opencv
 
 # Install required packages explicitly
 RUN pip install --no-cache-dir \
-    dtlpy>=1.90.0 \
-    fastapi>=0.104.0 \
-    uvicorn[standard]>=0.24.0 \
-    aiofiles>=23.0.0 \
-    pydantic>=2.0.0 \
-    typing-extensions>=4.5.0
+    dtlpy==1.98.19 \
+    fastapi==0.115.12 \
+    uvicorn[standard]==0.34.0 \
+    aiofiles==24.1.0 \
+    pydantic==2.11.1 \
+    typing-extensions==4.13.1
